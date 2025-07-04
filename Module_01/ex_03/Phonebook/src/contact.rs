@@ -2,7 +2,7 @@ pub struct Contact {
     pub name: String,
     pub phone: String,
     pub nickname: String,
-    pub bookmarked: bool,
+    pub is_bookmarked: bool,
 }
 
 impl Contact {
@@ -11,20 +11,22 @@ impl Contact {
             name,
             phone,
             nickname,
-            bookmarked: false,
+            is_bookmarked: false,
         }
     }
 
     pub fn display(&self) {
+        println!("");
         println!("--- Contact Info ---");
         println!("NAME    : {}", self.name);
         println!("PHONE   : {}", self.phone);
         println!("NICKNAME: {}", self.nickname);
-        if self.bookmarked {
-            println!("{} IS BOOKMARKED.", self.name);
+        if self.is_bookmarked {
+            println!("{} is Bookmarked.", self.name);
         } else {
-            println!("{} IS NOT BOOKMARKED.", self.name);
+            println!("{} is not Bookmarked.", self.name);
         }
-        println!("-------");
+        println!("--------------------");
+        println!("");
     }
 }
