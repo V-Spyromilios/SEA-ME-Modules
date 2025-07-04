@@ -1,3 +1,5 @@
+use colored::*;
+
 pub struct Contact {
     pub name: String,
     pub phone: String,
@@ -16,17 +18,42 @@ impl Contact {
     }
 
     pub fn display(&self) {
-        println!("");
-        println!("--- Contact Info ---");
-        println!("NAME    : {}", self.name);
-        println!("PHONE   : {}", self.phone);
-        println!("NICKNAME: {}", self.nickname);
+        println!();
+        println!("{}", "--- Contact Info ---".bold().white());
+
+        println!(
+            "{} {}",
+            "👤 NAME    :".bold().cyan(),
+            self.name.bold().cyan()
+        );
+
+        println!(
+            "{} {}",
+            "📞 PHONE   :".bold().green(),
+            self.phone.bold().green()
+        );
+
+        println!(
+            "{} {}",
+            "🏷️  NICKNAME :".bold().magenta(),
+            self.nickname.bold().magenta()
+        );
+
         if self.is_bookmarked {
-            println!("{} is Bookmarked.", self.name);
+            println!(
+                "{}",
+                format!("⭐ {} is Bookmarked.", self.name).bold().yellow()
+            );
         } else {
-            println!("{} is not Bookmarked.", self.name);
+            println!(
+                "{}",
+                format!("🔖 {} is not Bookmarked.", self.name)
+                    .bold()
+                    .white()
+            );
         }
-        println!("--------------------");
-        println!("");
+
+        println!("{}", "--------------------".bold().white());
+        println!();
     }
 }

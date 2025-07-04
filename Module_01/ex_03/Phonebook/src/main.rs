@@ -2,6 +2,7 @@ mod contact;
 mod phonebook;
 
 // use contact::Contact;
+use colored::*;
 use figlet_rs::FIGfont;
 use phonebook::Phonebook;
 use std::io::{self, Write};
@@ -12,13 +13,6 @@ use crate::contact::Contact;
 fn main() {
     let mut phonebook = Phonebook::new();
     print_welcome();
-    // let contact = Contact {
-    //     name: String::from("Evangelos"),
-    //     phone: String::from("Evangelos"),
-    //     nickname: String::from("Evangelos"),
-    //     is_bookmarked: true,
-    // };
-    // phonebook.add(contact);
 
     loop {
         print!("Enter Command (Or EXIT):  ");
@@ -28,7 +22,7 @@ fn main() {
         let command = input.trim();
         match command.to_uppercase().as_str() {
             "EXIT" => {
-                println!("Exiting Phonebook.");
+                println!("{}", "Exiting Phonebook.".bold().yellow());
                 break;
             }
             "SEARCH" => {
@@ -37,7 +31,7 @@ fn main() {
             "ADD" => add_new_contact(&mut phonebook),
             "REMOVE" => remove_by_index_or_phone(&mut phonebook),
             _ => {
-                println!("Uknown Command: {}. Try again!", command);
+                println!("Uknown Command: {}. Try again!", command.bold().yellow());
             }
         }
     }
@@ -45,15 +39,20 @@ fn main() {
 
 fn remove_by_index_or_phone(pb: &mut Phonebook) {
     if pb.get_contact_counter() == 0 {
-        println!("PhoneBook is empty.");
+        println!("{}", "PhoneBook is empty.".bold().yellow());
         return;
     }
     let indexed = pb.get_indexed_contacts();
     println!("PhoneBook contacts:");
     for (index, contact) in &indexed {
         println!(
-            "👤 Name : {} :: 📇 Index: {} :: 📞 Phone: {}",
-            contact.name, index, contact.phone
+            "{} {}  ::  {} {}  ::  {} {}",
+            "👤 Name:".bold().cyan(),
+            contact.name.bold().white(),
+            "📇 Index:".bold().magenta(),
+            index.to_string().bold().white(),
+            "📞 Phone:".bold().green(),
+            contact.phone.bold().yellow()
         );
     }
     let mut choise = String::new();
@@ -87,7 +86,13 @@ fn search_phonebook(pb: &mut Phonebook) {
     let indexed = pb.get_indexed_contacts();
     println!("PhoneBook contacts:");
     for (index, contact) in &indexed {
-        println!("👤 Name : {} 📇 Index: {}", contact.name, index);
+        println!(
+            "{} {}  {} {}",
+            "👤 Name:".bold().cyan(),
+            contact.name.bold().cyan(),
+            "📇 Index:".bold().magenta(),
+            index.to_string().bold().magenta()
+        );
     }
 
     loop {
@@ -105,7 +110,7 @@ fn search_phonebook(pb: &mut Phonebook) {
         let actual_index = match selected_index.parse::<usize>() {
             Ok(value) => value,
             Err(error) => {
-                println!("Error: {}", error);
+                println!("{} {}", "Error:".bold().red(), error.to_string().red());
                 return;
             }
         };
@@ -226,5 +231,10 @@ fn print_welcome() {
         None => eprintln!("Error generating ASCII art"),
     }
 
-    println!("PHONEBOOK COMMANDS:  ADD  SEARCH  REMOVE  BOOKMARK");
+    println!(
+        "{}",
+        "📘 PHONEBOOK COMMANDS:  ADD  SEARCH  REMOVE  BOOKMARK"
+            .bold()
+            .white()
+    );
 }
