@@ -1,0 +1,230 @@
+import { TabWidget, LineEdit, ListView } from "std-widgets.slint";
+
+struct ContactData {
+    name: string,
+    phone: string,
+    email: string,
+}
+
+component ContactRow inherits Rectangle {
+    in property <ContactData> contact;
+    callback delete(string);
+    callback bookmark(string);
+
+    height: 30px;
+    width: 100%;
+
+    HorizontalLayout {
+        spacing: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+        Text {
+            text: contact.name + " - " + contact.phone + " - " + contact.email;
+            font-size: 14px;
+            vertical-alignment: center;
+            horizontal-alignment: left;
+        }
+
+        Rectangle {
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border-radius: 12px;
+
+            TouchArea {
+                clicked => {
+                    delete(contact.name);
+                }
+            }
+
+            Text {
+                text: "🗑";
+                font-size: 14px;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+component SearchTab inherits Rectangle {
+    in-out property <[ContactData]> contacts;
+    in-out property <string> search_query: "";
+    in-out property <string> name_for_del;
+    callback delete_contact(string);
+    callback search_contacts(string) -> [ContactData];
+
+    VerticalLayout {
+        spacing: 8px;
+        padding: 12px;
+
+        LineEdit {
+            width: 100%;
+            placeholder-text: "Search by name, phone or email";
+            edited => {
+                root.search_query = self.text;
+            }
+
+            accepted => {
+                root.contacts = root.search_contacts(self.text);
+            }
+        }
+
+        ListView {
+            height: parent.height;
+            width: parent.width;
+
+            for data in root.contacts: ContactRow {
+                contact: data;
+                delete => {
+                    name_for_del = data.name;
+                    root.delete_contact(name_for_del);
+                }
+            }
+        }
+    }
+}
+
+component AddTab inherits Rectangle {
+    callback add_contact(string, string, string);
+
+    in-out property <string> name: "";
+    in-out property <string> phone: "";
+    in-out property <string> email: "";
+
+    width: 100%;
+    VerticalLayout {
+        spacing: 16px;
+        padding: 40px;
+        width: 600px;
+
+        name_input := LineEdit {
+
+            width: 500px;
+            placeholder-text: "Name";
+            font-size: 15px;
+            text: root.name;
+            edited => {
+                if !self.text.is-empty {
+                    root.name = self.text;
+                }
+            }
+        }
+
+        phone_input := LineEdit {
+
+            width: 500px;
+            placeholder-text: "Phone";
+            font-size: 15px;
+            text: root.phone;
+            edited => {
+                if !self.text.is-empty {
+                    root.phone = self.text;
+                }
+            }
+        }
+
+        email_input := LineEdit {
+
+            width: 500px;
+            placeholder-text: "Email";
+            font-size: 15px;
+            text: root.email;
+            edited => {
+                if !self.text.is-empty {
+                    root.email = self.text;
+                }
+            }
+        }
+
+        HorizontalLayout {
+            width: parent.width;
+            Rectangle {
+                height: 1px;
+                horizontal-stretch: 1;
+            }
+
+            Rectangle {
+
+                property <bool> is_pressed: false;
+                width: 150px;
+                height: 50px;
+                background: touch_area.pressed ? #005fa3 : #007acc;
+
+                border-radius: 4px;
+
+                button_text := Text {
+                    text: "Add Contact";
+                    color: white;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                }
+
+                touch_area := TouchArea {
+                    x: 0px;
+                    y: 0px;
+                    width: parent.width;
+                    height: parent.height;
+                    clicked => {
+                        button_text.text = "DEBUG";
+                        add_contact(root.name, root.phone, root.email);
+                        email_input.text = "";
+                        phone_input.text = "";
+                        name_input.text = "";
+                        root.name = "";
+                        root.email = "";
+                        root.phone = "";
+                    }
+                }
+
+                animate background {
+                    duration: 150ms;
+                    easing: ease-in-out;
+                }
+            }
+
+            Rectangle {
+                height: 1px; //important so it's considered in layout
+                   horizontal-stretch: 2;
+            }
+        }
+    }
+}
+
+export component MainWindow inherits Window {
+    width: 600px;
+    height: 300px;
+    title: "Phonebook";
+
+    in-out property <[ContactData]> contacts;
+
+    TabWidget {
+        Tab {
+            title: "Search";
+            SearchTab {
+                contacts <=> root.contacts;
+                delete_contact => {
+                    root.remove_contact(self.name_for_del);
+                }
+                search_contacts => {
+                    root.search_contacts(self.search_query);
+                }
+            }
+        }
+
+        Tab {
+            title: "Add";
+            AddTab {
+                add_contact => {
+                    root.add_contact(self.name, self.phone, self.email)
+                }
+            }
+        }
+    }
+
+    callback remove_contact(string);
+    callback search_contacts(string) -> [ContactData];
+    callback save_contacts([ContactData]); // UI -> Rust
+    callback load_contacts([ContactData]); //Rust -> UI
+    callback add_contact(string, string, string);
+}
