@@ -1,0 +1,78 @@
+import { Button, VerticalBox } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    callback start_race(); //must be in top level.
+
+    width: 440px;
+    height: 300px;
+    title: "Rust Thread Race!";
+
+    in property <int> car1_position: 0;
+    in property <int> car2_position: 0;
+    in property <int> car3_position: 0;
+    VerticalLayout {
+        spacing: 20px;
+        padding: 20px;
+
+        Rectangle {
+            height: 40px;
+            width: 400px;
+            border-width: 1px;
+            border-color: gray;
+            Rectangle {
+                animate x {
+                    duration: 100ms;
+                    easing: ease-in-out;
+                }
+                x: (parent.width - self.width) * root.car1_position / 100;
+                width: 30px;
+                height: 30px;
+                background: red;
+            }
+        }
+
+        Rectangle {
+            height: 40px;
+            width: 400px;
+            border-width: 1px;
+            border-color: gray;
+            Rectangle {
+                animate x {
+                    duration: 100ms;
+                    easing: ease-in-out;
+                }
+                x: (parent.width - self.width) * root.car2_position / 100;
+                width: 30px;
+                height: 30px;
+                background: green;
+            }
+        }
+
+        Rectangle {
+
+            height: 40px;
+            width: 400px;
+            border-width: 1px;
+            border-color: gray;
+
+            Rectangle {
+                animate x {
+                    duration: 100ms;
+                    easing: ease-in-out;
+                }
+                x: (parent.width - self.width) * root.car3_position / 100;
+                width: 30px;
+                height: 30px;
+                background: blue;
+            }
+        }
+
+        Button {
+            text: "Start Race";
+            clicked => {
+                start_race(); //automaticaly 'on_start_race' in main
+                self.text = "Restart Race";
+            }
+        }
+    }
+}
