@@ -6,10 +6,6 @@ fn main() {
     car.drive();
 
     let copy = car.clone();
-    println!(
-        "Copy name: '{}' and speed: {} km/h.",
-        copy.name(),
-        copy.speed(),
-    );
+    println!("{:?}", copy);
     copy.drive();
 }

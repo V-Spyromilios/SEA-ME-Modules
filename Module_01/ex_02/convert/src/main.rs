@@ -19,12 +19,7 @@ fn main() {
     let text = &arguments[2];
 
     match command.as_str() {
-        "up" => println!("{}", text.as_str().to_uppercase()), // could be text.to_uppercase() due to deref coercion
-        "down" => println!("{}", text.as_str().to_lowercase()),
-        _ => {
-            eprintln!("Unkown command: {}", command);
-            std::process::exit(1);
-        }
+        "up" => println!("{}", text.as_str().to_uppercase()
     }
 }
 

@@ -1,5 +1,7 @@
 use crate::contact::Contact;
 use std::fs::File;
+use std::fs::OpenOptions;
+use std::io::Read;
 
 #[derive(Clone)]
 pub struct Phonebook {
@@ -55,25 +57,44 @@ impl Phonebook {
     }
 
     pub fn load_from_file(path: &str) -> Self {
-        let mut contents = String::new();
-        use std::io::Read;
-        let mut f = File::open(path).unwrap();
-        f.read_to_string(&mut contents).unwrap();
-        println!("📄 File contents: {}", contents);
-
-        match File::open(path) {
-            Ok(file) => match serde_json::from_reader(file) {
-                Ok(contacts) => Phonebook { contacts },
-                Err(e) => {
-                    eprintln!("Failed to deserialize contacts: {}", e);
-                    Phonebook {
-                        contacts: Vec::new(),
-                    }
-                }
-            },
+        // ① Open **read-write**, creating the file when missing
+        let mut file = match OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true) // <-- the magic bit
+            .open(path)
+        {
+            Ok(f) => f,
             Err(e) => {
-                eprintln!("Failed to open contacts file: {}", e);
-                Phonebook {
+                eprintln!("❌ Cannot open or create `{}`: {}", path, e);
+                return Self {
+                    contacts: Vec::new(),
+                };
+            }
+        };
+
+        // ② Slurp the whole file into a String
+        let mut contents = String::new();
+        if let Err(e) = file.read_to_string(&mut contents) {
+            eprintln!("❌ Failed to read `{}`: {}", path, e);
+            return Self {
+                contacts: Vec::new(),
+            };
+        }
+
+        // ③ Empty file? => start with an empty phonebook
+        if contents.trim().is_empty() {
+            return Self {
+                contacts: Vec::new(),
+            };
+        }
+
+        // ④ Parse JSON; fall back to empty Vec on error
+        match serde_json::from_str::<Vec<Contact>>(&contents) {
+            Ok(contacts) => Self { contacts },
+            Err(e) => {
+                eprintln!("❌ JSON parse error in `{}`: {}", path, e);
+                Self {
                     contacts: Vec::new(),
                 }
             }
