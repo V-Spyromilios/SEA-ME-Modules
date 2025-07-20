@@ -5,8 +5,8 @@ Add, search, and delete contacts in a clean two-tab interface, with data
 persisted to **`contacts.json`**.
 
 <div align="center">
-  <img src="docs/screenshot_1.png" width="620" alt="Phonebook screenshot 1">
-  <img src="docs/screenshot_2.png" width="620" alt="Phonebook screenshot 2">
+  <img src="docs/Screenshot_1.png" width="620" alt="Phonebook screenshot 1">
+  <img src="docs/Screenshot_2.png" width="620" alt="Phonebook screenshot 2">
 </div>
 
 ---
