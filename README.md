@@ -2,8 +2,8 @@
 
 <img src="assets/SEAME_Logo.png" alt="Alt text" height="300"/>
 
-#### Written with Rust
+### Written with Rust
 
-> #### 🏠 [rustpberry.dev](https://rustpberry.dev)
+> ### 🏠 [rustpberry.dev](https://rustpberry.dev)
 >
-> #### Documenting my journey into the world of embedded Rust and automotive systems.
+> ### Documenting my journey into the world of embedded Rust and automotive systems.
