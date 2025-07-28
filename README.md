@@ -1,6 +1,6 @@
 # SEA-ME Modules
 
-![Alt text](assets/SEAME_Logo.png)
+<img src="assets/SEAME_Logo.png" alt="Alt text" height="300"/>
 
 #### Written with Rust
 
