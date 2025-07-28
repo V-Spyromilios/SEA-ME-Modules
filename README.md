@@ -1,6 +1,8 @@
-## SEA-ME Warm-up Modules
+# SEA-ME Modules
 
-#### Written with Rust and Slint
+![Alt text](assets/SEAME_Logo.png)
+
+#### Written with Rust
 
 > #### 🏠 [rustpberry.dev](https://rustpberry.dev)
 >
