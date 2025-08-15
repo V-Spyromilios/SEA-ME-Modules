@@ -1,0 +1,46 @@
+# Cargo.toml
+[package]
+name = "ard"
+version = "0.1.0"
+authors = ["Evangelos Spyromilios <vsp84@icloud.com>"]
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[[bin]]
+name = "ard"
+test = false
+bench = false
+
+[dependencies]
+panic-halt = "1.0.0"
+ufmt = "0.2.0"
+nb = "1.1.0"
+embedded-hal = "1.0"
+avr-device = { version = "0.7.0", features = ["rt"] }
+mcp2515 = "0.3"
+embedded-can = "0.4"
+embedded-hal-bus = "0.2"
+# avr-device = { version = "0.5", features = ["atmega328p", "rt"] }
+
+[dependencies.arduino-hal]
+git = "https://github.com/rahix/avr-hal"
+rev = "fafaf587a32a4500239fd073f89d1b9c36b48092"
+features = ["arduino-nano"]
+
+# Configure the build for minimal size - AVRs have very little program memory
+[profile.dev]
+panic = "abort"
+lto = true
+opt-level = "s"
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+debug = true
+lto = true
+opt-level = "s"
+
+# CAN driver + helpers
+mcp2515 = "0.3"
+embedded-can = "0.4"
+embedded-hal-bus = "0.2" # to turn (SPI bus + CS) into a SpiDevice

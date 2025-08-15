@@ -1,0 +1,13 @@
+# config.toml
+[build]
+target = "avr-none"
+
+[env]
+RUST_TARGET_PATH = { relative = true, value = "targets" }
+
+[target.'cfg(target_arch = "avr")']
+runner = "ravedude -P /dev/cu.usbserial-A10M5A2K"
+rustflags = ["-C", "target-cpu=atmega328p"]
+
+[unstable]
+build-std = ["core"]

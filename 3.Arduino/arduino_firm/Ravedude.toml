@@ -1,0 +1,8 @@
+# ravedude.toml
+[general]
+board = "nano-new"                         # try "nano" if uploads time out
+open-console = true
+serial-baudrate = 115200                   # just for the post-flash console
+serial-port = "/dev/cu.usbserial-A10M5A2K" # <— move here & rename key
+
+# (remove the whole [connection] section)
